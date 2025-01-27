@@ -21,7 +21,21 @@
   h1 {
     font-size: 2em;
     margin-bottom: 20px;
+  }
+  
+  .mode-selection button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #007BFF;
+    border: none;
     color: #fff;
+    margin: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .mode-selection button:hover {
+    background-color: #0056b3;
   }
   
   .board {
@@ -29,7 +43,7 @@
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
     gap: 5px;
-    margin-bottom: 20px;
+    margin-top: 20px;
   }
   
   .board div {

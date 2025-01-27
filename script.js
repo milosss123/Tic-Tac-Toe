@@ -1,13 +1,16 @@
 const board = document.getElementById('board');
 const resetButton = document.getElementById('resetButton');
-const multiplayerButton = document.getElementById('multiplayerButton');
+const aiModeButton = document.getElementById('aiModeButton');
+const multiplayerModeButton = document.getElementById('multiplayerModeButton');
 let currentPlayer = 'X'; // Player 'X' starts
 let gameOver = false;
 let boardState = ['', '', '', '', '', '', '', '', ''];
-let playerType = 'human'; // 'human' or 'ai'
+let playerType = ''; // 'human', 'ai', 'multiplayer'
+let gameMode = 'ai'; // 'ai' or 'multiplayer'
 
 // Initialize board cells
 function createBoard() {
+  board.innerHTML = '';
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.setAttribute('data-index', i);
@@ -20,7 +23,7 @@ function createBoard() {
 function handleCellClick(e) {
   const index = e.target.getAttribute('data-index');
 
-  if (boardState[index] !== '' || gameOver || playerType === 'ai' && currentPlayer === 'O') return;
+  if (boardState[index] !== '' || gameOver) return;
 
   boardState[index] = currentPlayer;
   e.target.textContent = currentPlayer;
@@ -40,6 +43,17 @@ function handleCellClick(e) {
 
 // Check if a player has won
 function checkWinner(player) {
+  const winPatterns = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
   return winPatterns.some(pattern => {
     return pattern.every(index => boardState[index] === player);
   });
@@ -66,10 +80,25 @@ function aiMove() {
   currentPlayer = 'X'; // Switch back to human
 }
 
-// Multiplayer (simulated for now)
-multiplayerButton.addEventListener('click', () => {
-  alert('Simulacija povezivanja sa igračima na WiFi... Ovo zahteva backend!');
-  // Ovdje bi išao kod za povezivanje sa drugim igračima
+// Multiplayer simulation (choose who to play with)
+multiplayerModeButton.addEventListener('click', () => {
+  alert('Povezivanje sa WiFi igračima... Simulacija!');
+  // You would need a WebSocket or backend service for real multiplayer.
+  gameMode = 'multiplayer';
+  playerType = 'multiplayer';
+  currentPlayer = 'X';
+  gameOver = false;
+  createBoard();
+  alert('Sada igraš 1v1 sa nekim na WiFi-u!');
+});
+
+// Start AI game mode
+aiModeButton.addEventListener('click', () => {
+  gameMode = 'ai';
+  playerType = 'ai';
+  currentPlayer = 'X';
+  gameOver = false;
+  createBoard();
 });
 
 // Reset game
@@ -82,17 +111,5 @@ resetButton.addEventListener('click', () => {
   });
 });
 
-// Win patterns
-const winPatterns = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
-
-// Start game
+// Start game in AI mode by default
 createBoard();
