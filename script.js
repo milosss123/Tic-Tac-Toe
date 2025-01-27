@@ -1,19 +1,10 @@
 const board = document.getElementById('board');
 const resetButton = document.getElementById('resetButton');
+const multiplayerButton = document.getElementById('multiplayerButton');
 let currentPlayer = 'X'; // Player 'X' starts
 let gameOver = false;
 let boardState = ['', '', '', '', '', '', '', '', ''];
-
-const winPatterns = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
+let playerType = 'human'; // 'human' or 'ai'
 
 // Initialize board cells
 function createBoard() {
@@ -28,8 +19,8 @@ function createBoard() {
 // Handle cell click
 function handleCellClick(e) {
   const index = e.target.getAttribute('data-index');
-  
-  if (boardState[index] !== '' || gameOver) return;
+
+  if (boardState[index] !== '' || gameOver || playerType === 'ai' && currentPlayer === 'O') return;
 
   boardState[index] = currentPlayer;
   e.target.textContent = currentPlayer;
@@ -41,7 +32,10 @@ function handleCellClick(e) {
   }
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; // Switch player
-  if (currentPlayer === 'O' && !gameOver) aiMove();
+
+  if (currentPlayer === 'O' && playerType === 'ai' && !gameOver) {
+    aiMove();
+  }
 }
 
 // Check if a player has won
@@ -51,11 +45,17 @@ function checkWinner(player) {
   });
 }
 
-// AI move
+// AI move (random placement)
 function aiMove() {
-  let bestMove = minimax(boardState, 'O');
-  boardState[bestMove] = 'O';
-  const aiCell = board.children[bestMove];
+  let availableMoves = boardState
+    .map((cell, index) => (cell === '' ? index : null))
+    .filter(index => index !== null);
+
+  if (availableMoves.length === 0) return;
+
+  let randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+  boardState[randomMove] = 'O';
+  const aiCell = board.children[randomMove];
   aiCell.textContent = 'O';
 
   if (checkWinner('O')) {
@@ -66,35 +66,11 @@ function aiMove() {
   currentPlayer = 'X'; // Switch back to human
 }
 
-// Minimax algorithm for AI
-function minimax(board, player) {
-  const availableMoves = board
-    .map((cell, index) => (cell === '' ? index : null))
-    .filter(index => index !== null);
-
-  if (checkWinner('X')) return -1;
-  if (checkWinner('O')) return 1;
-  if (availableMoves.length === 0) return 0;
-
-  let bestMove = null;
-  let bestScore = player === 'O' ? -Infinity : Infinity;
-
-  availableMoves.forEach(move => {
-    board[move] = player;
-    const score = minimax(board, player === 'O' ? 'X' : 'O');
-    board[move] = '';
-
-    if (player === 'O' && score > bestScore) {
-      bestScore = score;
-      bestMove = move;
-    } else if (player === 'X' && score < bestScore) {
-      bestScore = score;
-      bestMove = move;
-    }
-  });
-
-  return bestMove;
-}
+// Multiplayer (simulated for now)
+multiplayerButton.addEventListener('click', () => {
+  alert('Simulacija povezivanja sa igračima na WiFi... Ovo zahteva backend!');
+  // Ovdje bi išao kod za povezivanje sa drugim igračima
+});
 
 // Reset game
 resetButton.addEventListener('click', () => {
@@ -105,6 +81,18 @@ resetButton.addEventListener('click', () => {
     cell.textContent = '';
   });
 });
+
+// Win patterns
+const winPatterns = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
 
 // Start game
 createBoard();
