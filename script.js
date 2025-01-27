@@ -80,17 +80,6 @@ function aiMove() {
   currentPlayer = 'X'; // Switch back to human
 }
 
-// Multiplayer simulation (choose who to play with)
-multiplayerModeButton.addEventListener('click', () => {
-  alert('Povezivanje sa WiFi igračima... Simulacija!');
-  // You would need a WebSocket or backend service for real multiplayer.
-  gameMode = 'multiplayer';
-  playerType = 'multiplayer';
-  currentPlayer = 'X';
-  gameOver = false;
-  createBoard();
-  alert('Sada igraš 1v1 sa nekim na WiFi-u!');
-});
 
 // Start AI game mode
 aiModeButton.addEventListener('click', () => {
@@ -110,6 +99,3 @@ resetButton.addEventListener('click', () => {
     cell.textContent = '';
   });
 });
-
-// Start game in AI mode by default
-createBoard();
