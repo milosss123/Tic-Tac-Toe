@@ -29,7 +29,7 @@ function handleCellClick(e) {
   e.target.textContent = currentPlayer;
 
   if (checkWinner(currentPlayer)) {
-    alert(currentPlayer + ' wins!');
+    alert(currentPlayer + ' je pobedio!');
     gameOver = true;
     return;
   }
@@ -73,7 +73,7 @@ function aiMove() {
   aiCell.textContent = 'O';
 
   if (checkWinner('O')) {
-    alert('AI wins!');
+    alert('Izgubio si!');
     gameOver = true;
   }
 
